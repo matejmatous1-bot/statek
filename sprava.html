@@ -3,11 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Administrace | Syrovátkovi Statek</title>
+  <title>Rychlá správa | Syrovátkovi Statek</title>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
-  <script>window.CMS_MANUAL_INIT = true;</script>
+  <script>
+    // Aktivace ruční konfigurace bez potřeby config.yml
+    window.CMS_MANUAL_INIT = true;
+  </script>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
     const config = {
@@ -15,54 +18,77 @@
         name: "git-gateway",
         branch: "main",
       },
+      display_url: window.location.origin,
       media_folder: "images",
       public_folder: "images",
       collections: [
         {
           name: "content",
-          label: "Obsah webu",
+          label: "HLAVNÍ NABÍDKA",
           delete: false,
           editor: { preview: false },
           files: [
             {
-              label: "Hlavní obsah a Produkty",
+              label: "Ceník a texty",
               name: "data",
               file: "data/content.json",
               fields: [
                 {
-                  label: "Sekce O nás",
-                  name: "about",
-                  widget: "object",
-                  fields: [
-                    { label: "Levý sloupec", name: "textLeft", widget: "list", field: { label: "Odstavec", name: "p", widget: "string" } },
-                    { label: "Pravý sloupec", name: "textRight", widget: "list", field: { label: "Odstavec", name: "p", widget: "string" } },
-                    { label: "Carousel", name: "carouselImages", widget: "list", min: 4, max: 4, field: { label: "Obrázek", name: "img", widget: "image" } }
-                  ]
-                },
-                {
-                  label: "Produkty",
+                  label: "🛒 AKTUALIZACE NABÍDKY",
                   name: "products",
                   widget: "list",
-                  summary: "{{name}}",
+                  // Dashboard zobrazení pro rychlou orientaci
+                  summary: "{{#if soldOut}}🔴 VYPRODÁNO{{else}}🟢 SKLADEM{{/if}} — {{name}}",
+                  add_to_top: true,
                   fields: [
-                    { label: "Název", name: "name", widget: "string" },
-                    { label: "Poznámka", name: "note", widget: "string", required: false },
-                    { label: "Jednotka", name: "unit", widget: "string" },
-                    { label: "Cena", name: "price", widget: "string" },
-                    { label: "VYPRODÁNO", name: "soldOut", widget: "boolean", default: false },
-                    { label: "Linka", name: "hasBottomBorder", widget: "boolean", default: false }
+                    { 
+                      label: "STAV (Skladem / Vyprodáno)", 
+                      name: "soldOut", 
+                      widget: "boolean", 
+                      default: false,
+                      hint: "ZAPNUTO = Vyprodáno (přeškrtne se na webu). VYPNUTO = Skladem." 
+                    },
+                    { label: "Název položky", name: "name", widget: "string" },
+                    { label: "Cena (Kč)", name: "price", widget: "string" },
+                    
+                    // Pokročilá nastavení jsou sbalená, aby nepřekážela
+                    { 
+                      label: "⚙️ Detaily (jednotky, linky...)", 
+                      name: "details", 
+                      widget: "object",
+                      collapsed: true,
+                      fields: [
+                        { label: "Poznámka v závorce", name: "note", widget: "string", required: false },
+                        { label: "Jednotka", name: "unit", widget: "string", default: "1 kg" },
+                        { label: "Růžová linka pod řádkem", name: "hasBottomBorder", widget: "boolean", default: false },
+                        { label: "Těsné řádkování", name: "tightSpacing", widget: "boolean", default: false },
+                        { label: "Mezera nad (kategorie)", name: "isCategoryHeader", widget: "boolean", default: false }
+                      ]
+                    }
                   ]
                 },
                 {
-                  label: "Kontakt",
+                  label: "📝 ÚPRAVA TEXTŮ",
+                  name: "about",
+                  widget: "object",
+                  collapsed: true,
+                  fields: [
+                    { label: "Levý sloupec", name: "textLeft", widget: "list", field: { label: "Text", name: "p", widget: "string" } },
+                    { label: "Pravý sloupec", name: "textRight", widget: "list", field: { label: "Text", name: "p", widget: "string" } },
+                    { label: "Obrázky (carousel)", name: "carouselImages", widget: "list", field: { label: "Foto", name: "img", widget: "image" } }
+                  ]
+                },
+                {
+                  label: "📞 KONTAKTNÍ ÚDAJE",
                   name: "contact",
                   widget: "object",
+                  collapsed: true,
                   fields: [
                     { label: "Email", name: "email", widget: "string" },
                     { label: "Telefon", name: "phone", widget: "string" },
                     { label: "Adresa 1", name: "addressLine1", widget: "string" },
                     { label: "Adresa 2", name: "addressLine2", widget: "string" },
-                    { label: "Subjekt", name: "legalName", widget: "string" },
+                    { label: "Firma / Majitel", name: "legalName", widget: "string" },
                     { label: "IČ", name: "ic", widget: "string" }
                   ]
                 }
@@ -72,6 +98,7 @@
         }
       ]
     };
+
     CMS.init({ config });
   </script>
 </body>
