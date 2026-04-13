@@ -1,0 +1,67 @@
+{
+  "about": {
+    "textLeft": [
+      "Jsme rodinný statek na Praze-západ, konkrétně v obci Dolní Břežany – Lhota.",
+      "Chovu hovězího dobytka se věnujeme od r. 2010 a současně k tomu obhospodařujeme 130 ha zemědělské půdy k rostlinné výrobě a jako krmivo pro náš skot."
+    ],
+    "textRight": [
+      "Zaměřujeme se na chov masného plemene Blonde d'Aquitaine ve volném ustájení s výběhy.",
+      "Maso je k odběru přímo na statku v obchůdku. Maso je vakuově zabalené, označené a popsané, o jaký druh masa se jedná."
+    ],
+    "carouselImages": [
+      "images/cow1.jpg",
+      "images/cow2.jpg",
+      "images/cow3.jpg",
+      "images/cow4.jpg"
+    ]
+  },
+  "products": [
+    {
+      "name": "Balík masa",
+      "note": "přední, zadní + kus hrudí, žebro",
+      "unit": "10 kg",
+      "price": "2 600",
+      "soldOut": false,
+      "hasBottomBorder": true,
+      "tightSpacing": false
+    },
+    {
+      "name": "Roštěná",
+      "unit": "1 kg",
+      "price": "390",
+      "soldOut": false,
+      "isCategoryHeader": true,
+      "tightSpacing": true
+    },
+    {
+      "name": "Svíčková biftek",
+      "unit": "1 kg",
+      "price": "800",
+      "soldOut": false,
+      "tightSpacing": true
+    },
+    {
+      "name": "Flank steak",
+      "unit": "1 kg",
+      "price": "280",
+      "soldOut": true,
+      "hasBottomBorder": true,
+      "tightSpacing": true
+    },
+    {
+      "name": "Silný vývar",
+      "unit": "720 ml",
+      "price": "150",
+      "soldOut": false,
+      "hasBottomBorder": true
+    }
+  ],
+  "contact": {
+    "email": "petr@stateksyrovatkovi.cz",
+    "phone": "+420 123 456 789",
+    "addressLine1": "Farmářská 13",
+    "addressLine2": "Hostivice u Prahy",
+    "legalName": "Statek Syrovátkovi",
+    "ic": "12345678"
+  }
+}
