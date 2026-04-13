@@ -1,0 +1,21 @@
+{
+  "about": {
+    "textLeft": [
+      "XXXXXXXX"
+    ],
+    "textRight": [
+      "bsjdhbkhafbskjbackub"
+    ],
+    "carouselImages": [
+      "images/cow2.jpg"
+    ]
+  },
+  "contact": {
+    "email": "asdf",
+    "phone": "ds",
+    "addressLine1": "d\\s",
+    "addressLine2": "\\ds",
+    "legalName": "\\cds",
+    "ic": "\\dsa"
+  }
+}
