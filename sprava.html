@@ -6,12 +6,65 @@
   <title>Správa nabídky | Statek Syrovátkovi</title>
   <!-- Netlify Identity Widget -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  
+  <style>
+    /* CUSTOM STYLING PRO ADMIN ROZHRANÍ */
+    /* Tento blok přebarvuje standardní Decap CMS do barev statku */
+    
+    /* Skrytí zbytečných prvků pro čistší UX */
+    .nc-app-config-header { display: none !important; }
+
+    /* Hlavní kontejner */
+    #nc-root #nc-app-container {
+      background-color: #f8fafc;
+    }
+
+    /* Úprava horní lišty */
+    header {
+      background-color: #00527d !important;
+      color: white !important;
+    }
+
+    /* Úprava seznamu položek - Dashboard efekt */
+    .nc-collectionPage-sidebar {
+      background-color: white !important;
+      border-right: 1px solid #e2e8f0 !important;
+    }
+
+    /* Styl pro řádky v seznamu */
+    .nc-list-item-summary {
+      display: flex !important;
+      align-items: center !important;
+      padding: 12px !important;
+      font-family: sans-serif !important;
+      font-size: 15px !important;
+    }
+
+    /* Úprava editačního okna */
+    .nc-controlPane-control {
+      margin-bottom: 20px !important;
+      border-radius: 8px !important;
+      border: 1px solid #e2e8f0 !important;
+      padding: 15px !important;
+      background: white !important;
+    }
+
+    /* Vylepšení tlačítek */
+    .nc-app-header-button {
+      background-color: #fbd4dc !important;
+      color: #00527d !important;
+      font-weight: bold !important;
+      border-radius: 99px !important;
+      text-transform: uppercase !important;
+      padding: 8px 20px !important;
+    }
+  </style>
 </head>
 <body>
   <script>
     window.CMS_MANUAL_INIT = true;
   </script>
-  <!-- Decap CMS -->
+  <!-- Načtení Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
     const config = {
@@ -19,6 +72,7 @@
         name: "git-gateway",
         branch: "main",
       },
+      locale: 'cs',
       display_url: window.location.origin,
       media_folder: "images",
       public_folder: "images",
@@ -26,44 +80,43 @@
         {
           name: "meat_offer",
           label: "🥩 NABÍDKA MASA",
-          delete: false,
+          delete: true,
           editor: { preview: false },
           files: [
             {
-              label: "Aktuální ceník",
+              label: "Aktuální ceník produktů",
               name: "products_data",
               file: "data/content.json",
               fields: [
                 {
-                  label: "Seznam položek v nabídce",
+                  label: "Položky v ceníku",
                   name: "products",
                   widget: "list",
-                  // Toto vytvoří přehledný řádek v seznamu pro skvělé UX
-                  summary: "{{#if soldOut}}🔴 VYPRODÁNO{{else}}🟢 SKLADEM{{/if}} | {{name}} | {{price}} Kč",
+                  // UX Dashboard v seznamu:
+                  summary: "{{#if soldOut}}🔴 [VYPRODÁNO] {{else}}🟢 [SKLADEM] {{/if}} | {{name}} | {{price}} Kč",
                   add_to_top: true,
                   fields: [
                     { 
-                      label: "STAV (Zapnuto = Vyprodáno / Vypnuto = Skladem)", 
+                      label: "AKTIVNÍ STAV", 
                       name: "soldOut", 
                       widget: "boolean", 
                       default: false,
-                      hint: "Když zapnete, položka se na webu přeškrtne."
+                      hint: "Zapnutím (modrá) označíte maso jako VYPRODANÉ."
                     },
-                    { label: "Název masa / produktu", name: "name", widget: "string" },
-                    { label: "Váha / Jednotka (např. 1 kg nebo 10 kg balík)", name: "unit", widget: "string", default: "1 kg" },
+                    { label: "Název masa", name: "name", widget: "string" },
+                    { label: "Gramáž / Balení", name: "unit", widget: "string", default: "1 kg" },
                     { label: "Cena (Kč)", name: "price", widget: "string" },
                     
-                    // Pokročilé formátování - schované v sbalené sekci
                     { 
-                      label: "⚙️ Pokročilé nastavení (mezery, linky)", 
+                      label: "📐 Vzhled řádku (Pokročilé)", 
                       name: "format", 
                       widget: "object",
                       collapsed: true,
                       fields: [
-                        { label: "Poznámka v závorce (např. mix masa)", name: "note", widget: "string", required: false },
-                        { label: "Růžová linka pod řádkem", name: "hasBottomBorder", widget: "boolean", default: false },
-                        { label: "Těsné řádkování (kategorie)", name: "tightSpacing", widget: "boolean", default: false },
-                        { label: "Větší mezera nad řádkem (začátek sekce)", name: "isCategoryHeader", widget: "boolean", default: false }
+                        { label: "Poznámka v závorce", name: "note", widget: "string", required: false },
+                        { label: "Růžová linka pod", name: "hasBottomBorder", widget: "boolean", default: false },
+                        { label: "Těsné řádkování", name: "tightSpacing", widget: "boolean", default: false },
+                        { label: "Větší mezera nad (kategorie)", name: "isCategoryHeader", widget: "boolean", default: false }
                       ]
                     }
                   ]
