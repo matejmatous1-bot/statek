@@ -44,11 +44,11 @@
       "format": {
         "hasBottomBorder": true,
         "tightSpacing": true,
-        "isCategoryHeader": true
+        "isCategoryHeader": false
       }
     },
     {
-      "soldOut": true,
+      "soldOut": false,
       "details": {
         "unit": "1 kg",
         "hasBottomBorder": false,
