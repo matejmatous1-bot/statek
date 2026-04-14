@@ -260,9 +260,15 @@
 
         document.addEventListener('DOMContentLoaded', loadProducts);
 
-        // Netlify Identity Login redirect
+        // Opravené přesměrování (hodí do adminu jen po novém přihlášení, nikoliv při běžné návštěvě webu)
         if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("login", () => document.location.href = "/sprava.html");
+            window.netlifyIdentity.on("init", user => {
+                if (!user) {
+                    window.netlifyIdentity.on("login", () => {
+                        document.location.href = "/sprava.html";
+                    });
+                }
+            });
         }
     </script>
 </body>
