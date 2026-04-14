@@ -23,12 +23,12 @@
       "soldOut": false,
       "unit": "1 kg",
       "format": {
-        "hasBottomBorder": false,
-        "tightSpacing": false,
-        "isCategoryHeader": false
+        "hasBottomBorder": true,
+        "tightSpacing": true,
+        "isCategoryHeader": true
       },
       "name": "Hovězí Svíčková",
-      "price": "1600 Kč"
+      "price": "1600"
     },
     {
       "soldOut": false,
