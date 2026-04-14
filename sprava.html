@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rychlá správa | Syrovátkovi Statek</title>
+  <title>Správa nabídky | Statek Syrovátkovi</title>
+  <!-- Netlify Identity Widget -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
   <script>
-    // Aktivace ruční konfigurace bez potřeby config.yml
     window.CMS_MANUAL_INIT = true;
   </script>
+  <!-- Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
     const config = {
@@ -23,73 +24,48 @@
       public_folder: "images",
       collections: [
         {
-          name: "content",
-          label: "HLAVNÍ NABÍDKA",
+          name: "meat_offer",
+          label: "🥩 NABÍDKA MASA",
           delete: false,
           editor: { preview: false },
           files: [
             {
-              label: "Ceník a texty",
-              name: "data",
+              label: "Aktuální ceník",
+              name: "products_data",
               file: "data/content.json",
               fields: [
                 {
-                  label: "🛒 AKTUALIZACE NABÍDKY",
+                  label: "Seznam položek v nabídce",
                   name: "products",
                   widget: "list",
-                  // Dashboard zobrazení pro rychlou orientaci
-                  summary: "{{#if soldOut}}🔴 VYPRODÁNO{{else}}🟢 SKLADEM{{/if}} — {{name}}",
+                  // Toto vytvoří přehledný řádek v seznamu pro skvělé UX
+                  summary: "{{#if soldOut}}🔴 VYPRODÁNO{{else}}🟢 SKLADEM{{/if}} | {{name}} | {{price}} Kč",
                   add_to_top: true,
                   fields: [
                     { 
-                      label: "STAV (Skladem / Vyprodáno)", 
+                      label: "STAV (Zapnuto = Vyprodáno / Vypnuto = Skladem)", 
                       name: "soldOut", 
                       widget: "boolean", 
                       default: false,
-                      hint: "ZAPNUTO = Vyprodáno (přeškrtne se na webu). VYPNUTO = Skladem." 
+                      hint: "Když zapnete, položka se na webu přeškrtne."
                     },
-                    { label: "Název položky", name: "name", widget: "string" },
+                    { label: "Název masa / produktu", name: "name", widget: "string" },
+                    { label: "Váha / Jednotka (např. 1 kg nebo 10 kg balík)", name: "unit", widget: "string", default: "1 kg" },
                     { label: "Cena (Kč)", name: "price", widget: "string" },
                     
-                    // Pokročilá nastavení jsou sbalená, aby nepřekážela
+                    // Pokročilé formátování - schované v sbalené sekci
                     { 
-                      label: "⚙️ Detaily (jednotky, linky...)", 
-                      name: "details", 
+                      label: "⚙️ Pokročilé nastavení (mezery, linky)", 
+                      name: "format", 
                       widget: "object",
                       collapsed: true,
                       fields: [
-                        { label: "Poznámka v závorce", name: "note", widget: "string", required: false },
-                        { label: "Jednotka", name: "unit", widget: "string", default: "1 kg" },
+                        { label: "Poznámka v závorce (např. mix masa)", name: "note", widget: "string", required: false },
                         { label: "Růžová linka pod řádkem", name: "hasBottomBorder", widget: "boolean", default: false },
-                        { label: "Těsné řádkování", name: "tightSpacing", widget: "boolean", default: false },
-                        { label: "Mezera nad (kategorie)", name: "isCategoryHeader", widget: "boolean", default: false }
+                        { label: "Těsné řádkování (kategorie)", name: "tightSpacing", widget: "boolean", default: false },
+                        { label: "Větší mezera nad řádkem (začátek sekce)", name: "isCategoryHeader", widget: "boolean", default: false }
                       ]
                     }
-                  ]
-                },
-                {
-                  label: "📝 ÚPRAVA TEXTŮ",
-                  name: "about",
-                  widget: "object",
-                  collapsed: true,
-                  fields: [
-                    { label: "Levý sloupec", name: "textLeft", widget: "list", field: { label: "Text", name: "p", widget: "string" } },
-                    { label: "Pravý sloupec", name: "textRight", widget: "list", field: { label: "Text", name: "p", widget: "string" } },
-                    { label: "Obrázky (carousel)", name: "carouselImages", widget: "list", field: { label: "Foto", name: "img", widget: "image" } }
-                  ]
-                },
-                {
-                  label: "📞 KONTAKTNÍ ÚDAJE",
-                  name: "contact",
-                  widget: "object",
-                  collapsed: true,
-                  fields: [
-                    { label: "Email", name: "email", widget: "string" },
-                    { label: "Telefon", name: "phone", widget: "string" },
-                    { label: "Adresa 1", name: "addressLine1", widget: "string" },
-                    { label: "Adresa 2", name: "addressLine2", widget: "string" },
-                    { label: "Firma / Majitel", name: "legalName", widget: "string" },
-                    { label: "IČ", name: "ic", widget: "string" }
                   ]
                 }
               ]
