@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Syrovátkovi Statek</title>
     
-    <!-- Netlify Identity Widget -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -51,7 +48,6 @@
             overflow: hidden;
         }
         
-        /* Pozadí hero sekce s jemným obrázkem */
         .hero-bg::before {
             content: '';
             position: absolute;
@@ -63,7 +59,6 @@
             z-index: 0;
         }
 
-        /* Arch efekt pro fotky v carouselu */
         .arch-image {
             border-radius: 9999px 9999px 0 0;
             object-fit: cover;
@@ -81,7 +76,7 @@
             left: 0;
             top: 40%; 
             width: 100%;
-            height: 1px; 
+            height: 2px; 
             background-color: white;
             z-index: 10;
             pointer-events: none;
@@ -90,15 +85,43 @@
         .sold-out-row > div {
             opacity: 0.35;
         }
+
+        /* STYLY PRO TAJNÝ EDITOVACÍ MÓD */
+        #editor-banner {
+            display: none;
+        }
+        body.editor-mode #editor-banner {
+            display: flex;
+        }
+        
+        body.editor-mode .product-row {
+            cursor: pointer;
+            border: 2px dashed rgba(251, 212, 220, 0.5); /* farm-pink s průhledností */
+            padding: 8px 12px;
+            margin: -10px -14px;
+            border-radius: 8px;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        body.editor-mode .product-row:hover {
+            background-color: rgba(251, 212, 220, 0.2);
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body class="bg-white flex flex-col min-h-screen">
 
+    <!-- Upozornění na aktivní editor mód -->
+    <div id="editor-banner" class="fixed top-0 left-0 w-full bg-farm-pink text-farm-blue font-bold text-center py-3 z-50 shadow-md justify-between px-6 items-center">
+        <span></span>
+        <span class="tracking-widest uppercase">🛠️ Režim úprav aktivní (Klikni na produkt pro vyprodání)</span>
+        <button id="close-editor" class="text-farm-blue hover:opacity-70 text-xl leading-none">&times;</button>
+    </div>
+
     <!-- HERO SEKCE -->
     <header class="hero-bg min-h-screen flex flex-col items-center justify-center relative px-6 py-20 text-center">
-        <div class="mb-10 flex flex-col items-center relative z-10 w-full max-w-3xl">
-            
-            <!-- PŮVODNÍ SVG LOGO - BEZ ZMĚN -->
+        <!-- TAJNÝ SPUŠTĚČ: Kliknutím na toto logo 3x se aktivuje editor -->
+        <div id="secret-trigger" class="mb-10 flex flex-col items-center relative z-10 w-full max-w-3xl cursor-default">
             <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 157.5 261.9" class="w-[85%] sm:w-[75%] md:w-[65%] max-w-[550px] h-auto text-farm-blue mb-4">
                 <defs><style>.st0 { fill: currentColor; }</style></defs>
                 <g>
@@ -140,7 +163,6 @@
             </svg>
         </div>
 
-        <!-- Šipka pro skok k obsahu -->
         <a href="#o-nas" class="absolute bottom-10 animate-bounce text-white z-10 hover:opacity-75 transition-opacity cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
@@ -151,13 +173,11 @@
     <!-- SEKCE O NÁS -->
     <section id="o-nas" class="bg-white relative z-10 overflow-visible">
         <div class="max-w-7xl mx-auto px-6 py-20 md:py-32 grid grid-cols-1 md:grid-cols-[1fr_420px_1fr] gap-12 items-center">
-            
             <div class="text-center font-bold text-[14px] md:text-[15px] leading-relaxed order-1">
                 <p class="mb-4">Jsme rodinný statek na Praze-západ, v obci Dolní Břežany – Lhota.</p>
                 <p>Chovu hovězího dobytka se věnujeme od r. 2010 a současně k tomu obhospodařujeme 130 ha zemědělské půdy k rostlinné výrobě a jako krmivo pro náš skot.</p>
             </div>
-
-            <!-- CAROUSEL S FOTKAMI -->
+            
             <div class="relative w-full max-w-[320px] md:max-w-[420px] mx-auto aspect-[3/4] shadow-2xl rounded-t-full z-40 mb-[-10rem] md:mb-[-15rem] order-3 md:order-2 overflow-hidden bg-gray-100">
                 <div id="carousel-images" class="absolute inset-0 w-full h-full">
                     <img src="images/cow1.jpg" class="slide arch-image absolute inset-0 transition-opacity duration-700 opacity-100 z-10">
@@ -180,17 +200,39 @@
         </div>
     </section>
 
-    <!-- NABÍDKA MASA (DYNAMICKÁ) -->
+    <!-- NABÍDKA MASA -->
     <section class="bg-farm-blue text-white px-6 pb-32 pt-56 md:pt-72 relative z-0">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-3xl md:text-4xl font-bold text-center tracking-wider mb-16 uppercase">Aktuální nabídka masa</h2>
+            
+            <!-- PEVNÝ SEZNAM PRODUKTŮ S DATA-ID PRO UKLÁDÁNÍ STAVU -->
             <div id="product-list" class="flex flex-col font-bold text-[16.5px] md:text-[19px]">
-                <!-- Produkty se načtou skriptem níže -->
+                
+                <!-- Příklad 1 -->
+                <div class="product-row flex justify-between items-end border-b-2 border-farm-pink pb-4 py-4 pt-6 gap-4 relative" data-id="hov-balik">
+                    <div class="flex-grow">
+                        <span>Hovězí balík masa</span>
+                        <span class="font-normal text-sm opacity-80 block md:inline md:ml-2">(mix přední a zadní)</span>
+                    </div>
+                    <div class="whitespace-nowrap">10 kg</div>
+                    <div class="whitespace-nowrap text-right font-bold">2 600 Kč</div>
+                </div>
+
+                <!-- Příklad 2 -->
+                <div class="product-row flex justify-between items-end py-4 pt-6 gap-4 relative" data-id="svickova">
+                    <div class="flex-grow">
+                        <span>Svíčková</span>
+                    </div>
+                    <div class="whitespace-nowrap">1 kg</div>
+                    <div class="whitespace-nowrap text-right font-bold">850 Kč</div>
+                </div>
+
+                <!-- Zde můžeš libovolně překopírovat a přidávat další <div class="product-row..."> -->
+                
             </div>
         </div>
     </section>
 
-    <!-- OBJEDNÁVKOVÉ TLAČÍTKO -->
     <div class="relative flex justify-center z-50 h-0 w-full">
         <a id="order-button" href="mailto:petr@stateksyrovatkovi.cz?subject=Objednávka%20masa" class="absolute top-0 -translate-y-1/2 inline-flex items-center justify-center bg-farm-pink hover:bg-farm-pinkDark text-farm-blue font-bold tracking-widest uppercase py-6 px-16 rounded-full text-lg shadow-xl transition-all transform hover:scale-105 active:scale-95">
             OBJEDNAT
@@ -209,34 +251,9 @@
         </div>
     </footer>
 
+    <!-- SKRIPTY PRO CAROUSEL A TAJNÝ EDITOR -->
     <script>
-        // NAČÍTÁNÍ PRODUKTŮ Z JSONU
-        async function loadProducts() {
-            try {
-                const res = await fetch('./data/content.json');
-                const data = await res.json();
-                renderProducts(data.products || []);
-            } catch {
-                console.warn("Nepodařilo se načíst data produktů.");
-            }
-        }
-
-        function renderProducts(products) {
-            document.getElementById('product-list').innerHTML = products.map(p => {
-                const f = p.format || {}; // Ošetření pro starší data
-                return `
-                <div class="flex justify-between items-end ${f.hasBottomBorder ? 'border-b-2 border-farm-pink pb-4' : ''} ${f.tightSpacing ? 'py-1' : 'py-4'} ${f.isCategoryHeader ? 'pt-6' : ''} ${p.soldOut ? 'sold-out-row' : ''} gap-4 relative">
-                    <div class="flex-grow">
-                        <span>${p.name}</span>
-                        ${f.note ? `<span class="font-normal text-sm opacity-80 block md:inline md:ml-2">(${f.note})</span>` : ''}
-                    </div>
-                    <div class="whitespace-nowrap">${p.unit || '1 kg'}</div>
-                    <div class="whitespace-nowrap text-right font-bold">${p.price} Kč</div>
-                </div>`;
-            }).join('');
-        }
-
-        // CAROUSEL LOGIKA
+        // 1. CAROUSEL
         let cur = 0;
         const imgs = document.querySelectorAll('.slide');
         const bts = document.querySelectorAll('#carousel-dots button');
@@ -258,18 +275,64 @@
             bts.forEach((btn, i) => btn.onclick = () => updateCarousel(i));
         }
 
-        document.addEventListener('DOMContentLoaded', loadProducts);
+        // 2. TAJNÝ EDITOR
+        let clickCount = 0;
+        let clickTimeout;
+        const secretTrigger = document.getElementById('secret-trigger');
+        const editorBanner = document.getElementById('editor-banner');
+        const closeEditorBtn = document.getElementById('close-editor');
 
-        // Opravené přesměrování (hodí do adminu jen po novém přihlášení, nikoliv při běžné návštěvě webu)
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user) {
-                    window.netlifyIdentity.on("login", () => {
-                        document.location.href = "/sprava.html";
-                    });
+        // Detekce 3 rychlých kliknutí na logo
+        secretTrigger.addEventListener('click', () => {
+            clickCount++;
+            clearTimeout(clickTimeout);
+            clickTimeout = setTimeout(() => clickCount = 0, 1000); // Reset po 1 vteřině
+            
+            if (clickCount >= 3) {
+                document.body.classList.add('editor-mode');
+                clickCount = 0;
+            }
+        });
+
+        // Zavření editoru
+        closeEditorBtn.addEventListener('click', () => {
+            document.body.classList.remove('editor-mode');
+        });
+
+        // Klikání na položky (odškrtávání) a ukládání stavu
+        const products = document.querySelectorAll('.product-row');
+        
+        products.forEach(row => {
+            row.addEventListener('click', (e) => {
+                // Pokud není editor mód, nic se neděje
+                if (!document.body.classList.contains('editor-mode')) return; 
+                
+                row.classList.toggle('sold-out-row');
+                saveSoldOutState();
+            });
+        });
+
+        // Načtení paměti při otevření webu
+        function loadSoldOutState() {
+            const savedState = JSON.parse(localStorage.getItem('farmState') || '{}');
+            products.forEach(row => {
+                if (savedState[row.dataset.id]) {
+                    row.classList.add('sold-out-row');
                 }
             });
         }
+
+        // Uložení do paměti po kliknutí
+        function saveSoldOutState() {
+            const state = {};
+            products.forEach(row => {
+                state[row.dataset.id] = row.classList.contains('sold-out-row');
+            });
+            localStorage.setItem('farmState', JSON.stringify(state));
+        }
+
+        // Spustit po načtení
+        document.addEventListener('DOMContentLoaded', loadSoldOutState);
     </script>
 </body>
 </html>
