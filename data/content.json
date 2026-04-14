@@ -17,5 +17,18 @@
     "addressLine2": "\\ds",
     "legalName": "\\cds",
     "ic": "\\dsa"
-  }
+  },
+  "products": [
+    {
+      "soldOut": false,
+      "details": {
+        "unit": "1 kg",
+        "hasBottomBorder": false,
+        "tightSpacing": false,
+        "isCategoryHeader": false
+      },
+      "name": "Hovězí svíčková",
+      "price": "900 Kč"
+    }
+  ]
 }
