@@ -21,14 +21,31 @@
   "products": [
     {
       "soldOut": false,
+      "unit": "1 kg",
+      "format": {
+        "hasBottomBorder": false,
+        "tightSpacing": false,
+        "isCategoryHeader": false
+      },
+      "name": "Hovězí Svíčková",
+      "price": "1600 Kč"
+    },
+    {
+      "soldOut": false,
       "details": {
         "unit": "1 kg",
         "hasBottomBorder": false,
         "tightSpacing": false,
         "isCategoryHeader": false
       },
-      "name": "ddsdd",
-      "price": "80 Kg"
+      "name": "Hovězí Svíčková",
+      "price": "800 Kč",
+      "unit": "3 kg",
+      "format": {
+        "hasBottomBorder": true,
+        "tightSpacing": true,
+        "isCategoryHeader": true
+      }
     },
     {
       "soldOut": true,
@@ -39,7 +56,13 @@
         "isCategoryHeader": false
       },
       "name": "Hovězí svíčková",
-      "price": "900 Kč"
+      "price": "900 Kč",
+      "unit": "1 kg",
+      "format": {
+        "hasBottomBorder": true,
+        "tightSpacing": true,
+        "isCategoryHeader": true
+      }
     }
   ]
 }
